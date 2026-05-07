@@ -1,0 +1,355 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="aria_robot">
+
+
+ <!-- Tell xacro which UR robot type to use -->
+ <xacro:arg name="ur_type" default="ur5e"/>
+ <xacro:property name="ur_type" value="$(arg ur_type)"/>
+
+
+ <!-- Include UR arm -->
+ <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+
+ <!-- ========== MOBILE BASE ========== -->
+ <link name="base_link">
+   <visual>
+     <geometry><box size="0.55 0.45 0.12"/></geometry>
+     <material name="navy"><color rgba="0.08 0.12 0.25 1"/></material>
+   </visual>
+   <collision>
+     <geometry><box size="0.55 0.45 0.12"/></geometry>
+   </collision>
+   <inertial>
+     <mass value="8.0"/>
+     <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+   </inertial>
+ </link>
+
+
+ <link name="body_top">
+   <visual>
+     <geometry><box size="0.45 0.35 0.06"/></geometry>
+     <material name="dark_gray"><color rgba="0.15 0.15 0.2 1"/></material>
+   </visual>
+ </link>
+ <joint name="body_top_joint" type="fixed">
+   <parent link="base_link"/>
+   <child link="body_top"/>
+   <origin xyz="0 0 0.09"/>
+ </joint>
+
+
+ <link name="lidar_dome">
+   <visual>
+     <geometry><cylinder radius="0.06" length="0.04"/></geometry>
+     <material name="white"><color rgba="0.95 0.95 0.95 1"/></material>
+   </visual>
+ </link>
+ <joint name="lidar_dome_joint" type="fixed">
+   <parent link="body_top"/>
+   <child link="lidar_dome"/>
+   <origin xyz="-0.1 0 0.05"/>
+ </joint>
+
+
+ <link name="front_bumper">
+   <visual>
+     <geometry><box size="0.04 0.45 0.06"/></geometry>
+     <material name="orange"><color rgba="1.0 0.45 0.0 1"/></material>
+   </visual>
+ </link>
+ <joint name="front_bumper_joint" type="fixed">
+   <parent link="base_link"/>
+   <child link="front_bumper"/>
+   <origin xyz="0.275 0 0.0"/>
+ </joint>
+
+
+ <link name="back_bumper">
+   <visual>
+     <geometry><box size="0.04 0.45 0.06"/></geometry>
+     <material name="orange"><color rgba="1.0 0.45 0.0 1"/></material>
+   </visual>
+ </link>
+ <joint name="back_bumper_joint" type="fixed">
+   <parent link="base_link"/>
+   <child link="back_bumper"/>
+   <origin xyz="-0.275 0 0.0"/>
+ </joint>
+
+
+ <!-- ========== WHEELS ========== -->
+ <link name="front_left_wheel">
+   <visual>
+     <geometry><cylinder radius="0.09" length="0.06"/></geometry>
+     <material name="tire"><color rgba="0.1 0.1 0.1 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.5"/>
+     <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="front_left_wheel_joint" type="continuous">
+   <parent link="base_link"/>
+   <child link="front_left_wheel"/>
+   <origin xyz="0.18 0.25 -0.04" rpy="1.5707 0 0"/>
+   <axis xyz="0 0 1"/>
+ </joint>
+
+
+ <link name="front_left_rim">
+   <visual>
+     <geometry><cylinder radius="0.055" length="0.065"/></geometry>
+     <material name="rim"><color rgba="0.7 0.7 0.75 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.1"/>
+     <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="front_left_rim_joint" type="fixed">
+   <parent link="front_left_wheel"/>
+   <child link="front_left_rim"/>
+   <origin xyz="0 0 0"/>
+ </joint>
+
+
+ <link name="front_right_wheel">
+   <visual>
+     <geometry><cylinder radius="0.09" length="0.06"/></geometry>
+     <material name="tire"><color rgba="0.1 0.1 0.1 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.5"/>
+     <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="front_right_wheel_joint" type="continuous">
+   <parent link="base_link"/>
+   <child link="front_right_wheel"/>
+   <origin xyz="0.18 -0.25 -0.04" rpy="1.5707 0 0"/>
+   <axis xyz="0 0 1"/>
+ </joint>
+
+
+ <link name="front_right_rim">
+   <visual>
+     <geometry><cylinder radius="0.055" length="0.065"/></geometry>
+     <material name="rim"><color rgba="0.7 0.7 0.75 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.1"/>
+     <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="front_right_rim_joint" type="fixed">
+   <parent link="front_right_wheel"/>
+   <child link="front_right_rim"/>
+   <origin xyz="0 0 0"/>
+ </joint>
+
+
+ <link name="back_left_wheel">
+   <visual>
+     <geometry><cylinder radius="0.09" length="0.06"/></geometry>
+     <material name="tire"><color rgba="0.1 0.1 0.1 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.5"/>
+     <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="back_left_wheel_joint" type="continuous">
+   <parent link="base_link"/>
+   <child link="back_left_wheel"/>
+   <origin xyz="-0.18 0.25 -0.04" rpy="1.5707 0 0"/>
+   <axis xyz="0 0 1"/>
+ </joint>
+
+
+ <link name="back_left_rim">
+   <visual>
+     <geometry><cylinder radius="0.055" length="0.065"/></geometry>
+     <material name="rim"><color rgba="0.7 0.7 0.75 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.1"/>
+     <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="back_left_rim_joint" type="fixed">
+   <parent link="back_left_wheel"/>
+   <child link="back_left_rim"/>
+   <origin xyz="0 0 0"/>
+ </joint>
+
+
+ <link name="back_right_wheel">
+   <visual>
+     <geometry><cylinder radius="0.09" length="0.06"/></geometry>
+     <material name="tire"><color rgba="0.1 0.1 0.1 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.5"/>
+     <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="back_right_wheel_joint" type="continuous">
+   <parent link="base_link"/>
+   <child link="back_right_wheel"/>
+   <origin xyz="-0.18 -0.25 -0.04" rpy="1.5707 0 0"/>
+   <axis xyz="0 0 1"/>
+ </joint>
+
+
+ <link name="back_right_rim">
+   <visual>
+     <geometry><cylinder radius="0.055" length="0.065"/></geometry>
+     <material name="rim"><color rgba="0.7 0.7 0.75 1"/></material>
+   </visual>
+   <inertial>
+     <mass value="0.1"/>
+     <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+   </inertial>
+ </link>
+
+
+ <joint name="back_right_rim_joint" type="fixed">
+   <parent link="back_right_wheel"/>
+   <child link="back_right_rim"/>
+   <origin xyz="0 0 0"/>
+ </joint>
+
+
+ <!-- ========== ARM MOUNT ========== -->
+ <link name="arm_mount">
+   <visual>
+     <geometry><cylinder radius="0.08" length="0.05"/></geometry>
+     <material name="orange"><color rgba="1.0 0.45 0.0 1"/></material>
+   </visual>
+ </link>
+ <joint name="arm_mount_joint" type="fixed">
+   <parent link="body_top"/>
+   <child link="arm_mount"/>
+   <origin xyz="0.1 0 0.055"/>
+ </joint>
+
+
+ <!-- ========== UR5E ARM ON TOP ========== -->
+ <xacro:ur_robot
+   name="arm"
+   tf_prefix="arm_"
+   parent="arm_mount"
+   joint_limits_parameters_file="$(find ur_description)/config/ur5e/joint_limits.yaml"
+   kinematics_parameters_file="$(find ur_description)/config/ur5e/default_kinematics.yaml"
+   physical_parameters_file="$(find ur_description)/config/ur5e/physical_parameters.yaml"
+   visual_parameters_file="$(find ur_description)/config/ur5e/visual_parameters.yaml">
+   <origin xyz="0 0 0.05" rpy="0 0 0"/>
+ </xacro:ur_robot>
+
+<!-- ========== ROBOTIQ 2F-85 GRIPPER ========== -->
+
+<xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro"/>
+
+<xacro:robotiq_gripper
+  name="gripper"
+  prefix="gripper_"
+  parent="arm_tool0">
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</xacro:robotiq_gripper>
+
+ <!-- ========== ROS2 CONTROL ========== -->
+ <ros2_control name="AriaRobotSystem" type="system">
+   <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+   </hardware>
+
+   
+
+
+   <!-- UR5e ARM JOINTS -->
+   <joint name="arm_shoulder_pan_joint">
+     <command_interface name="position"/>
+     <state_interface name="position"/>
+   </joint>
+
+
+   <joint name="arm_shoulder_lift_joint">
+     <command_interface name="position"/>
+     <state_interface name="position"/>
+   </joint>
+
+
+   <joint name="arm_elbow_joint">
+     <command_interface name="position"/>
+     <state_interface name="position"/>
+   </joint>
+
+
+   <joint name="arm_wrist_1_joint">
+     <command_interface name="position"/>
+     <state_interface name="position"/>
+   </joint>
+
+
+   <joint name="arm_wrist_2_joint">
+     <command_interface name="position"/>
+     <state_interface name="position"/>
+   </joint>
+
+
+   <joint name="arm_wrist_3_joint">
+     <command_interface name="position"/>
+     <state_interface name="position"/>
+   </joint>
+ 
+  
+   <!-- ================= MOBILE BASE JOINTS ================= -->
+
+<joint name="front_left_wheel_joint">
+  <command_interface name="velocity"/>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="front_right_wheel_joint">
+  <command_interface name="velocity"/>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="back_left_wheel_joint">
+  <command_interface name="velocity"/>
+  <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+<joint name="back_right_wheel_joint">
+  <command_interface name="velocity"/>
+   <state_interface name="position"/>
+  <state_interface name="velocity"/>
+</joint>
+
+ </ros2_control>
+ <gazebo>
+  <plugin filename="libgz_ros2_control-system.so"
+           name="gz_ros2_control::GazeboSimROS2ControlPlugin"/>
+ </gazebo>
+
+
+</robot>
