@@ -7,10 +7,15 @@ from ament_index_python.packages import get_package_share_directory
 import os
 import subprocess
 
+
 def generate_launch_description():
 
     pkg_path = get_package_share_directory('warehouse_robot')
-
+    world_path = os.path.join(
+        pkg_path,
+        'worlds',
+        'warehouse.world'
+    )
     xacro_file = os.path.join(pkg_path, 'urdf', 'aria_robot.urdf.xacro')
 
     robot_description = subprocess.check_output(
@@ -18,29 +23,24 @@ def generate_launch_description():
     ).decode('utf-8')
 
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('ros_gz_sim'),
-                'launch',
-                'gz_sim.launch.py'
-            )
+    PythonLaunchDescriptionSource(
+        os.path.join(
+            get_package_share_directory('ros_gz_sim'),
+            'launch',
+            'gz_sim.launch.py'
         )
-    )
+    ),
+    launch_arguments={
+        'gz_args': '-r ' + world_path
+    }.items()
+)
 
     robot_state_pub = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         parameters=[{'robot_description': robot_description}]
     )
-    controller_manager = Node(
-    package='controller_manager',
-    executable='ros2_control_node',
-    output='screen',
-    parameters=[
-        {'robot_description': robot_description},
-        os.path.join(pkg_path, 'config', 'controllers.yaml')
-    ]
-)
+    
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
@@ -54,7 +54,7 @@ def generate_launch_description():
 
    
     joint_state_broadcaster_spawner = TimerAction(
-        period=5.0,
+        period=15.0,
         actions=[Node(
         package='controller_manager',
         executable='spawner',
@@ -63,18 +63,18 @@ def generate_launch_description():
     )]
     )
 
-    joint_trajectory_spawner = TimerAction(
-        period=6.0,
-        actions=[Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_trajectory_controller'],
-        output='screen'
-    )]
-    )
+    # joint_trajectory_spawner = TimerAction(
+    #     period=6.0,
+    #     actions=[Node(
+    #     package='controller_manager',
+    #     executable='spawner',
+    #     arguments=['joint_trajectory_controller'],
+    #     output='screen'
+    # )]
+    # )
 
     diff_drive_spawner = TimerAction(
-        period=7.0,
+        period=18.0,
         actions=[Node(
         package='controller_manager',
         executable='spawner',
@@ -87,11 +87,10 @@ def generate_launch_description():
     return LaunchDescription([
         gazebo,
         robot_state_pub,
-        controller_manager,
         spawn_robot,
     
       
         joint_state_broadcaster_spawner,
-        joint_trajectory_spawner,
+        # joint_trajectory_spawner,
         diff_drive_spawner 
     ])
