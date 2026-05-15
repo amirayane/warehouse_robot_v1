@@ -66,7 +66,7 @@ ros2 launch warehouse_robot gazebo.launch.py
 
 >  Controller spawning is delayed (15s for joint_state_broadcaster, 18s for diff_drive). Wait for the terminal to confirm they are active before sending commands.
 
-### RViz2 only (no Gazebo)
+### RViz2 only 
 
 ```bash
 ros2 launch warehouse_robot display.launch.py
