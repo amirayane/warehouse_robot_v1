@@ -155,8 +155,8 @@ ros2_ws/src/warehouse_robot/
 ├── config/
 │   └── controllers.yaml
 ├── launch/
-│   ├── display.launch.py       # RViz2 only
-│   └── gazebo.launch.py        # Full Gazebo simulation
+│   ├── display.launch.py       
+│   └── gazebo.launch.py        
 ├── urdf/
 │   └── aria_robot.urdf.xacro
 ├── worlds/
